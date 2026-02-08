@@ -1,0 +1,446 @@
+PS C:\Users\PC\Downloads\files\Новая папка (2)\files> make test
+g++ -std=c++17 -Wall -Wextra -O2 -o test_stage1 test_stage1.o RandomStreamGen.o HashFuncGen.o
+g++ -std=c++17 -Wall -Wextra -O2 -o test_stage2 test_stage2.o RandomStreamGen.o HashFuncGen.o HyperLogLog.o
+./test_stage1
+=== Этап 1: Тестирование инфраструктуры ===
+
+--- Тест 1: Генерация потока данных ---
+Генерация потока из 100000 элементов...
+Generated 100000 elements...
+Поток сгенерирован успешно!
+
+Примеры сгенерированных строк:
+1. "ZrjkNBrdNAA"
+2. "m4ZQBGXA7r5ay"
+3. "Ae36-bI2wsoo-aHHaK"
+4. "P9Vp"
+5. "W3FfVdrEZMp3MMe7"
+6. "yKd7Z-Ib4q8ZO"
+7. "fDXWu6AJ3HPb20Q41F99Fp"
+8. "AhOmkICpV9o27M-agbkZcDAb"
+9. "zlW"
+10. "Fhg2629reoKswXWHRqNu"
+
+Распределение длин строк:
+Длина  1:   3308 (3.31%)
+Длина  2:   3304 (3.30%)
+Длина  3:   3278 (3.28%)
+Длина  4:   3384 (3.38%)
+Длина  5:   3371 (3.37%)
+Длина  6:   3347 (3.35%)
+Длина  7:   3369 (3.37%)
+Длина  8:   3314 (3.31%)
+Длина  9:   3465 (3.46%)
+Длина 10:   3198 (3.20%)
+Длина 11:   3349 (3.35%)
+Длина 12:   3329 (3.33%)
+Длина 13:   3365 (3.37%)
+Длина 14:   3371 (3.37%)
+Длина 15:   3425 (3.42%)
+Длина 16:   3293 (3.29%)
+Длина 17:   3378 (3.38%)
+Длина 18:   3282 (3.28%)
+Длина 19:   3449 (3.45%)
+Длина 20:   3353 (3.35%)
+Длина 21:   3258 (3.26%)
+Длина 22:   3280 (3.28%)
+Длина 23:   3368 (3.37%)
+Длина 24:   3328 (3.33%)
+Длина 25:   3162 (3.16%)
+Длина 26:   3329 (3.33%)
+Длина 27:   3340 (3.34%)
+Длина 28:   3348 (3.35%)
+Длина 29:   3278 (3.28%)
+Длина 30:   3377 (3.38%)
+
+--- Тест 2: Разбиение потока на части ---
+10.00% потока: 10000 элементов
+25.00% потока: 25000 элементов
+50.00% потока: 50000 элементов
+75.00% потока: 75000 элементов
+100.00% потока: 100000 элементов
+
+--- Тест 3: Хеш-функция ---
+
+Примеры хеш-значений:
+hash("ZrjkNBrdNAA") = 3741447950 (0xdf01f70e)
+hash("m4ZQBGXA7r5ay") = 143331923 (0x88b1253)
+hash("Ae36-bI2wsoo-aHHaK") = 3010200003 (0xb36c01c3)
+hash("P9Vp") = 3490011329 (0xd00558c1)
+hash("W3FfVdrEZMp3MMe7") = 3647809197 (0xd96d26ad)
+hash("yKd7Z-Ib4q8ZO") = 118112699 (0x70a41bb)
+hash("fDXWu6AJ3HPb20Q41F99Fp") = 1069058820 (0x3fb88b04)
+hash("AhOmkICpV9o27M-agbkZcDAb") = 3434743480 (0xccba06b8)
+hash("zlW") = 3944697853 (0xeb1f4ffd)
+hash("Fhg2629reoKswXWHRqNu") = 1978754083 (0x75f16423)
+
+--- Тест 4: Проверка коллизий ---
+Всего элементов: 100000
+Уникальных хешей: 95672
+Коллизий: 4328
+Процент коллизий: 4.3280%
+
+--- Тест 5: Равномерность распределения хеш-функции ---
+
+=== Test Uniformity of Hash Function ===
+Total elements: 100000
+Number of buckets: 1000
+Expected per bucket: 100.00
+Min count: 67
+Max count: 177
+Variance: 285.38
+Std deviation: 16.89
+Coefficient of variation: 16.89%
+Chi-square statistic: 2853.78
+========================================
+
+
+--- Тест 6: Анализ уникальных элементов по частям потока ---
+
+Количество уникальных строк на каждом шаге:
+Процент   РазмерУникальные строки
+---------------------------------------------
+       10%          10000                9727
+       20%          20000               19365
+       30%          30000               28948
+       40%          40000               38523
+       50%          50000               48096
+       60%          60000               57653
+       70%          70000               67188
+       80%          80000               76688
+       90%          90000               86209
+      100%         100000               95672
+
+=== Все тесты этапа 1 пройдены успешно! ===
+./test_stage2
+=== Этап 2: Реализация и оценка HyperLogLog ===
+
+Параметры:
+B = 14 (количество регистров: 16384)
+Количество потоков: 10
+Размер потока: 1000000
+
+Теоретическая ошибка:
+1.04/√m = 0.8125%
+1.32/√m = 1.0312%
+
+--- Генерация и тестирование потоков ---
+
+Поток #1:
+Generated 100000 elements...
+Generated 200000 elements...
+Generated 300000 elements...
+Generated 400000 elements...
+Generated 500000 elements...
+Generated 600000 elements...
+Generated 700000 elements...
+Generated 800000 elements...
+Generated 900000 elements...
+Generated 1000000 elements...
+10.0000%: Exact=  95769, HLL=  96774, Error=  1.05%
+20.00%: Exact= 189995, HLL= 194486, Error=  2.36%
+30.00%: Exact= 283652, HLL= 286787, Error=  1.11%
+40.00%: Exact= 376830, HLL= 381033, Error=  1.12%
+50.00%: Exact= 470160, HLL= 471673, Error=  0.32%
+60.00%: Exact= 563175, HLL= 563498, Error=  0.06%
+70.00%: Exact= 656124, HLL= 655418, Error=  0.11%
+80.00%: Exact= 749077, HLL= 746311, Error=  0.37%
+90.00%: Exact= 842056, HLL= 839966, Error=  0.25%
+100.00%: Exact= 935012, HLL= 936018, Error=  0.11%
+
+Поток #2:
+Generated 100000 elements...
+Generated 200000 elements...
+Generated 300000 elements...
+Generated 400000 elements...
+Generated 500000 elements...
+Generated 600000 elements...
+Generated 700000 elements...
+Generated 800000 elements...
+Generated 900000 elements...
+Generated 1000000 elements...
+10.00%: Exact=  95597, HLL=  94802, Error=  0.83%
+20.00%: Exact= 189798, HLL= 185867, Error=  2.07%
+30.00%: Exact= 283369, HLL= 276091, Error=  2.57%
+40.00%: Exact= 376805, HLL= 372162, Error=  1.23%
+50.00%: Exact= 470155, HLL= 464125, Error=  1.28%
+60.00%: Exact= 563227, HLL= 556804, Error=  1.14%
+70.00%: Exact= 656286, HLL= 648174, Error=  1.24%
+80.00%: Exact= 749254, HLL= 736808, Error=  1.66%
+90.00%: Exact= 842217, HLL= 829984, Error=  1.45%
+100.00%: Exact= 935232, HLL= 922990, Error=  1.31%
+
+Поток #3:
+Generated 100000 elements...
+Generated 200000 elements...
+Generated 300000 elements...
+Generated 400000 elements...
+Generated 500000 elements...
+Generated 600000 elements...
+Generated 700000 elements...
+Generated 800000 elements...
+Generated 900000 elements...
+Generated 1000000 elements...
+10.00%: Exact=  95696, HLL=  95899, Error=  0.21%
+20.00%: Exact= 190012, HLL= 191437, Error=  0.75%
+30.00%: Exact= 283667, HLL= 282761, Error=  0.32%
+40.00%: Exact= 377091, HLL= 375469, Error=  0.43%
+50.00%: Exact= 470490, HLL= 469726, Error=  0.16%
+60.00%: Exact= 563575, HLL= 559375, Error=  0.75%
+70.00%: Exact= 656485, HLL= 650466, Error=  0.92%
+80.00%: Exact= 749494, HLL= 744185, Error=  0.71%
+90.00%: Exact= 842422, HLL= 840611, Error=  0.21%
+100.00%: Exact= 935358, HLL= 938948, Error=  0.38%
+
+Поток #4:
+Generated 100000 elements...
+Generated 200000 elements...
+Generated 300000 elements...
+Generated 400000 elements...
+Generated 500000 elements...
+Generated 600000 elements...
+Generated 700000 elements...
+Generated 800000 elements...
+Generated 900000 elements...
+Generated 1000000 elements...
+10.00%: Exact=  95575, HLL=  95862, Error=  0.30%
+20.00%: Exact= 189893, HLL= 190439, Error=  0.29%
+30.00%: Exact= 283506, HLL= 285684, Error=  0.77%
+40.00%: Exact= 376872, HLL= 378341, Error=  0.39%
+50.00%: Exact= 470170, HLL= 474973, Error=  1.02%
+60.00%: Exact= 563448, HLL= 573909, Error=  1.86%
+70.00%: Exact= 656612, HLL= 663948, Error=  1.12%
+80.00%: Exact= 749679, HLL= 748336, Error=  0.18%
+90.00%: Exact= 842737, HLL= 848065, Error=  0.63%
+100.00%: Exact= 935538, HLL= 939574, Error=  0.43%
+
+Поток #5:
+Generated 100000 elements...
+Generated 200000 elements...
+Generated 300000 elements...
+Generated 400000 elements...
+Generated 500000 elements...
+Generated 600000 elements...
+Generated 700000 elements...
+Generated 800000 elements...
+Generated 900000 elements...
+Generated 1000000 elements...
+10.00%: Exact=  95557, HLL=  94800, Error=  0.79%
+20.00%: Exact= 189738, HLL= 192054, Error=  1.22%
+30.00%: Exact= 283405, HLL= 284134, Error=  0.26%
+40.00%: Exact= 376758, HLL= 378110, Error=  0.36%
+50.00%: Exact= 469864, HLL= 472575, Error=  0.58%
+60.00%: Exact= 562898, HLL= 563482, Error=  0.10%
+70.00%: Exact= 655970, HLL= 651411, Error=  0.70%
+80.00%: Exact= 748926, HLL= 751274, Error=  0.31%
+90.00%: Exact= 841934, HLL= 846998, Error=  0.60%
+100.00%: Exact= 934837, HLL= 938331, Error=  0.37%
+
+Поток #6:
+Generated 100000 elements...
+Generated 200000 elements...
+Generated 300000 elements...
+Generated 400000 elements...
+Generated 500000 elements...
+Generated 600000 elements...
+Generated 700000 elements...
+Generated 800000 elements...
+Generated 900000 elements...
+Generated 1000000 elements...
+10.00%: Exact=  95624, HLL=  96524, Error=  0.94%
+20.00%: Exact= 189892, HLL= 190238, Error=  0.18%
+30.00%: Exact= 283505, HLL= 282721, Error=  0.28%
+40.00%: Exact= 376835, HLL= 374463, Error=  0.63%
+50.00%: Exact= 470034, HLL= 463229, Error=  1.45%
+60.00%: Exact= 563294, HLL= 557610, Error=  1.01%
+70.00%: Exact= 656446, HLL= 652277, Error=  0.64%
+80.00%: Exact= 749484, HLL= 745185, Error=  0.57%
+90.00%: Exact= 842397, HLL= 836667, Error=  0.68%
+100.00%: Exact= 935327, HLL= 930105, Error=  0.56%
+
+Поток #7:
+Generated 100000 elements...
+Generated 200000 elements...
+Generated 300000 elements...
+Generated 400000 elements...
+Generated 500000 elements...
+Generated 600000 elements...
+Generated 700000 elements...
+Generated 800000 elements...
+Generated 900000 elements...
+Generated 1000000 elements...
+10.00%: Exact=  95626, HLL=  95701, Error=  0.08%
+20.00%: Exact= 189815, HLL= 190458, Error=  0.34%
+30.00%: Exact= 283357, HLL= 287495, Error=  1.46%
+40.00%: Exact= 376642, HLL= 380770, Error=  1.10%
+50.00%: Exact= 469893, HLL= 478210, Error=  1.77%
+60.00%: Exact= 563017, HLL= 571720, Error=  1.55%
+70.00%: Exact= 656101, HLL= 670816, Error=  2.24%
+80.00%: Exact= 749182, HLL= 767316, Error=  2.42%
+90.00%: Exact= 842215, HLL= 853660, Error=  1.36%
+100.00%: Exact= 935162, HLL= 947730, Error=  1.34%
+
+Поток #8:
+Generated 100000 elements...
+Generated 200000 elements...
+Generated 300000 elements...
+Generated 400000 elements...
+Generated 500000 elements...
+Generated 600000 elements...
+Generated 700000 elements...
+Generated 800000 elements...
+Generated 900000 elements...
+Generated 1000000 elements...
+10.00%: Exact=  95740, HLL=  95053, Error=  0.72%
+20.00%: Exact= 189959, HLL= 189768, Error=  0.10%
+30.00%: Exact= 283557, HLL= 284566, Error=  0.36%
+40.00%: Exact= 376948, HLL= 378502, Error=  0.41%
+50.00%: Exact= 470086, HLL= 473741, Error=  0.78%
+60.00%: Exact= 563323, HLL= 566631, Error=  0.59%
+70.00%: Exact= 656409, HLL= 660382, Error=  0.61%
+80.00%: Exact= 749414, HLL= 757179, Error=  1.04%
+90.00%: Exact= 842539, HLL= 848559, Error=  0.71%
+100.00%: Exact= 935561, HLL= 935903, Error=  0.04%
+
+Поток #9:
+Generated 100000 elements...
+Generated 200000 elements...
+Generated 300000 elements...
+Generated 400000 elements...
+Generated 500000 elements...
+Generated 600000 elements...
+Generated 700000 elements...
+Generated 800000 elements...
+Generated 900000 elements...
+Generated 1000000 elements...
+10.00%: Exact=  95607, HLL=  96051, Error=  0.46%
+20.00%: Exact= 189882, HLL= 188746, Error=  0.60%
+30.00%: Exact= 283605, HLL= 282867, Error=  0.26%
+40.00%: Exact= 376957, HLL= 379298, Error=  0.62%
+50.00%: Exact= 470169, HLL= 474071, Error=  0.83%
+60.00%: Exact= 563245, HLL= 565913, Error=  0.47%
+70.00%: Exact= 656273, HLL= 656605, Error=  0.05%
+80.00%: Exact= 749224, HLL= 752860, Error=  0.49%
+90.00%: Exact= 842216, HLL= 847543, Error=  0.63%
+100.00%: Exact= 935024, HLL= 944749, Error=  1.04%
+
+Поток #10:
+Generated 100000 elements...
+Generated 200000 elements...
+Generated 300000 elements...
+Generated 400000 elements...
+Generated 500000 elements...
+Generated 600000 elements...
+Generated 700000 elements...
+Generated 800000 elements...
+Generated 900000 elements...
+Generated 1000000 elements...
+10.00%: Exact=  95700, HLL=  96350, Error=  0.68%
+20.00%: Exact= 189871, HLL= 189435, Error=  0.23%
+30.00%: Exact= 283517, HLL= 286017, Error=  0.88%
+40.00%: Exact= 376851, HLL= 380858, Error=  1.06%
+50.00%: Exact= 469912, HLL= 471927, Error=  0.43%
+60.00%: Exact= 562937, HLL= 566141, Error=  0.57%
+70.00%: Exact= 655976, HLL= 658709, Error=  0.42%
+80.00%: Exact= 748993, HLL= 754935, Error=  0.79%
+90.00%: Exact= 841990, HLL= 841918, Error=  0.01%
+100.00%: Exact= 934857, HLL= 939260, Error=  0.47%
+
+=== Статистика по всем потокам ===
+    Step    Exact F0    Mean(Nt)     Std(Nt)    Error(%)
+--------------------------------------------------------
+  10.00%       95769       95781         664       0.01%
+  20.00%      189995      190292        2122       0.16%
+  30.00%      283652      283912        3068       0.09%
+  40.00%      376830      377900        2828       0.28%
+  50.00%      470160      471425        4426       0.27%
+  60.00%      563175      564508        5337       0.24%
+  70.00%      656124      656820        6557       0.11%
+  80.00%      749077      750438        7943       0.18%
+  90.00%      842056      843397        6563       0.16%
+ 100.00%      935012      937360        6611       0.25%
+
+=== Анализ распределения по регистрам ===
+Generated 100000 elements...
+Generated 200000 elements...
+Generated 300000 elements...
+Generated 400000 elements...
+Generated 500000 elements...
+Generated 600000 elements...
+Generated 700000 elements...
+Generated 800000 elements...
+Generated 900000 elements...
+Generated 1000000 elements...
+Распределение значений в регистрах:
+Значение  3:     10 ( 0.06%)
+Значение  4:    477 ( 2.91%)
+Значение  5:   2227 (13.59%)
+Значение  6:   3945 (24.08%)
+Значение  7:   3854 (23.52%)
+Значение  8:   2581 (15.75%)
+Значение  9:   1538 ( 9.39%)
+Значение 10:    855 ( 5.22%)
+Значение 11:    432 ( 2.64%)
+Значение 12:    228 ( 1.39%)
+Значение 13:    128 ( 0.78%)
+Значение 14:     58 ( 0.35%)
+Значение 15:     27 ( 0.16%)
+Значение 16:      7 ( 0.04%)
+Значение 17:      8 ( 0.05%)
+Значение 18:      2 ( 0.01%)
+Значение 19:      7 ( 0.04%)
+
+=== Обоснование выбора B = 14 ===
+1. Количество регистров: 16384
+2. Память: 16384 байт ≈ 16.00 КБ
+3. Теоретическая точность: ~0.81%
+4. Хороший баланс между точностью и памятью
+
+Файлы с данными созданы:
+- statistics.csv (статистика по всем потокам)
+- single_stream.csv (детальные данные одного потока)
+
+=== Этап 2 завершен! ===
+python3 visualize.py
+C:\Users\PC\Downloads\files\Новая папка (2)\files\visualize.py:68: UserWarning: Glyph 8320 (\N{SUBSCRIPT ZERO}) missing from font(s) Arial.
+  plt.tight_layout()
+C:\Users\PC\Downloads\files\Новая папка (2)\files\visualize.py:68: UserWarning: Glyph 8348 (\N{LATIN SUBSCRIPT SMALL LETTER T}) missing from font(s) Arial.
+  plt.tight_layout()
+C:\Users\PC\Downloads\files\Новая папка (2)\files\visualize.py:69: UserWarning: Glyph 8320 (\N{SUBSCRIPT ZERO}) missing from font(s) Arial.
+  plt.savefig('graph1_comparison.png', dpi=300, bbox_inches='tight')
+C:\Users\PC\Downloads\files\Новая папка (2)\files\visualize.py:69: UserWarning: Glyph 8348 (\N{LATIN SUBSCRIPT SMALL LETTER T}) missing from font(s) Arial.
+  plt.savefig('graph1_comparison.png', dpi=300, bbox_inches='tight')
+График №1 сохранен: graph1_comparison.png
+C:\Users\PC\Downloads\files\Новая папка (2)\files\visualize.py:109: UserWarning: Glyph 8320 (\N{SUBSCRIPT ZERO}) missing from font(s) Arial.
+  plt.tight_layout()
+C:\Users\PC\Downloads\files\Новая папка (2)\files\visualize.py:109: UserWarning: Glyph 8348 (\N{LATIN SUBSCRIPT SMALL LETTER T}) missing from font(s) Arial.
+  plt.tight_layout()
+C:\Users\PC\Downloads\files\Новая папка (2)\files\visualize.py:110: UserWarning: Glyph 8320 (\N{SUBSCRIPT ZERO}) missing from font(s) Arial.
+  plt.savefig('graph2_statistics.png', dpi=300, bbox_inches='tight')
+C:\Users\PC\Downloads\files\Новая папка (2)\files\visualize.py:110: UserWarning: Glyph 8348 (\N{LATIN SUBSCRIPT SMALL LETTER T}) missing from font(s) Arial.
+  plt.savefig('graph2_statistics.png', dpi=300, bbox_inches='tight')
+График №2 сохранен: graph2_statistics.png
+График №3 сохранен: graph3_accuracy.png
+
+================================================================================
+СТАТИСТИКА ТОЧНОСТИ HYPERLOGLOG (B=14)
+================================================================================
+Шаг      Точное F₀    E(Nₜ)        σ(Nₜ)        Ошибка %
+--------------------------------------------------------------------------------
+    10%  95769        95782        664                0.01%
+    20%  189995       190293       2122               0.16%
+    30%  283652       283912       3068               0.09%
+    40%  376830       377901       2829               0.28%
+    50%  470160       471425       4427               0.27%
+    60%  563175       564508       5338               0.24%
+    70%  656124       656821       6557               0.11%
+    80%  749077       750439       7944               0.18%
+    90%  842056       843397       6564               0.16%
+   100%  935012       937361       6612               0.25%
+================================================================================
+
+Средняя ошибка по всем шагам: 0.18%
+Максимальная ошибка: 0.28%
+Минимальная ошибка: 0.01%
+
+Все ошибки в пределах теоретической границы 1.32/√m: ДА ✓
